@@ -1,6 +1,10 @@
 # Syno, the Medicine Assistant Chatbot
 
-This project is about a virtual medicine assistant chatbot named Syno using RAG (Retrieval-Augmented Generation) to provide information about medicines based on a dataset with 11,000 medicines.
+Syno is a virtual medicine assistant chatbot designed to provide detailed and accurate information about medicines using advanced Retrieval-Augmented Generation (RAG) techniques. Leveraging a dataset of 11,000 medicines, Syno offers insights on compositions, uses, and side effects. This tool aims to enhance medical decision-making and patient care by ensuring quick and reliable access to critical drug information for both healthcare professionals and patients.
+
+![image](https://github.com/synoloris/syno-medicine-assistant-chatbot/assets/24429312/9f2b7387-7b7c-4b1c-985e-1ac24163dde7)
+![image](https://github.com/synoloris/syno-medicine-assistant-chatbot/assets/24429312/aaa462f7-6adf-4f18-b2f4-ce1be51b4b24)
+![image](https://github.com/synoloris/syno-medicine-assistant-chatbot/assets/24429312/2051971d-58ad-4ed3-9871-dbbd07269ca2)
 
 
 ## Table of Contents
