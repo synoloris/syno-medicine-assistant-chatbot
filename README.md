@@ -225,7 +225,7 @@ Run the following command in the root of the project to embed the dataset.
 python model/embed_dataset.py
 ```
 
-After running the command, the files `embed_dataset.py` and `embed_dataset.py` will be created inside folder `model`. 
+After running the command, the files `corpus_embeddings.pt` and `embedded_dataset.csv` will be created inside folder `model`. 
 
 ### 6. Run the Application
 
