@@ -215,7 +215,7 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 ```
 
-### 5. The embedded dataset
+### 5. Embed the dataset
 
 The dataset has been downloaded from Kaggle and lies under `dataset/Medicine_Details.csv` and can be embedded using the `embed_dataset.py` script.
 
