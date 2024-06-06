@@ -61,7 +61,7 @@ The primary dataset used in this project is sourced from [Kaggle](https://www.ka
 ## Modeling
 
 ### Approach
-- **Pre-trained Model**: The project utilizes the `all-MiniLM-L6-v2` model from the Sentence Transformers library to encode the dataset. This model is chosen for its balance of speed and accuracy, making it suitable for real-time applications.
+- **Pre-trained Model**: The project utilizes the `all-MiniLM-L6-v2` model from the Sentence Transformers library to encode the dataset, which can be found on [HuggingFace](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2). This model is chosen for its balance of speed and accuracy, making it suitable for real-time applications.
 - **RAG (Retrieval-Augmented Generation)**: The core approach involves two main components:
   1. **Retrieval**: Given a user query, the embedded dataset is searched to retrieve the most relevant pieces of information. This is done using the pre-trained Sentence Transformer model to ensure semantically similar results.
   2. **Generation**: The retrieved information is then passed to OpenAI's GPT-3.5-turbo model to generate a coherent and contextually appropriate response. This ensures that the chatbot's answers are not only accurate but also easy to understand.
@@ -211,15 +211,17 @@ CREATE TABLE IF NOT EXISTS messages (
 );
 ```
 
-### 5. Embed the Dataset
+### 5. The embedded dataset
 
-Download the dataset from Kaggle and embed it using the embed_dataset.py script. Make sure you have set up Kaggle API credentials.
+The dataset has been downloaded from Kaggle and lies under `dataset/Medicine_Details.csv` and can be embedded using the `embed_dataset.py` script.
 
-Run the script to embed the dataset:
+Run the following command in the root of the project to embed the dataset.
 
 ```bash
-python embed_dataset.py
+python model/embed_dataset.py
 ```
+
+After running the command, the files `embed_dataset.py` and `embed_dataset.py` will be created inside folder `model`. 
 
 ### 6. Run the Application
 
