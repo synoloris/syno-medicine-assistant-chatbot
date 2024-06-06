@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syno | New User</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/png" href="/static/images/favicon.png" />
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <div class="header-info">
+                <img src="/static/images/syno.png" alt="Syno">
+                <h2>New user</h2>
+            </div>
+            <a title="Go back" href="/"><img alt="Go back" src="/static/images/back.png" /></a>
+        </div>
+        <form action="/new" method="post" id="newUserForm">
+            <div class="content">
+                <label id="label"  for="name">Name:</label>
+                <div class="input-container">
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div id="response"></div>
+            </div>
+            <button class="button create-button" type="submit">Create</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('newUserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+
+            fetch('/new', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('label').style.display = 'none';
+                document.getElementById('name').style.display = 'none';
+                document.getElementById('response').innerHTML = `<p>User created!</p> <a class="button" href="/chat/${data.uuid}">Open chat</a>`;
+            })
+            .catch(error => {
+                document.getElementById('response').innerHTML = '<p>Error creating user...</p>';
+                console.error('Error:', error);
+            });
+        });
+
+    </script>
+</body>
+</html>

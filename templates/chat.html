@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syno | Chat</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/png" href="/static/images/favicon.png" />
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <div class="header-info">
+                <img src="/static/images/syno.png" alt="Syno">
+                <h2>Syno</h2>
+            </div>
+            <div class="">
+                <a title="Go back" href="/"><img alt="Go back" src="/static/images/back.png" /></a>
+                <img class="clear-history" onclick="clearHistory()" src="/static/images/trash.png" alt="Clear history">
+            </div>
+        </div>
+        <div id="content" class="content">
+        </div>
+        <div class="input-container">
+            <input type="text" id="messageInput" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const userUuid = window.location.pathname.split('/').pop();
+        const initialPrompt = "{{ initial_prompt | safe }}";
+        const contentDiv = document.getElementById('content');
+        const messagesDiv = document.getElementById('content');
+
+        function decodeHtml(html) {
+            const txt = document.createElement('textarea');
+            txt.innerHTML = html;
+            return txt.value;
+        }
+
+        function appendMessage(sender, message, createdAt = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message', sender === 'user' ? 'user' : 'bot');
+        
+            const avatar = document.createElement('img');
+            if (sender === 'bot') {
+                avatar.src = '/static/images/syno.png';
+                avatar.alt = 'Doctor Avatar';
+            } else {
+                avatar.src = '/static/images/patient.png';
+                avatar.alt = 'Patient Avatar';
+            }
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('content');
+            contentDiv.textContent = message;
+        
+            if (createdAt) {
+                const timestampDiv = document.createElement('small');
+                timestampDiv.classList.add('timestamp');
+                timestampDiv.textContent = createdAt;
+                messageDiv.appendChild(timestampDiv);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        function fetchMessages() {
+            fetch(`/messages/${userUuid}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length === 0 && initialPrompt) {
+                        appendMessage('bot', decodeHtml(initialPrompt), new Date().toISOString().slice(0, 19).replace('T', ' '));
+                        // Save initial prompt as a message in the chat
+                        fetch('/message', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                chat_id: userUuid,
+                                sender: 'bot',
+                                message: decodeHtml(initialPrompt)
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Initial prompt saved:', data);
+                        })
+                        .catch(error => console.error('Error saving initial prompt:', error));
+                    } else {
+                        messagesDiv.innerHTML = '';
+                        data.forEach(message => {
+                            appendMessage(message.sender, message.message, message.created_at);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error fetching messages:', error));
+        }
+        
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const message = messageInput.value;
+
+            if (message.trim() === '') return;
+
+            const createdAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+            messageInput.value = '';
+            appendMessage('user', message, createdAt);
+
+            fetch('/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: userUuid,
+                    sender: 'user',
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage('bot', data.response, createdAt);
+            })
+            .catch(error => console.error('Error sending message:', error));
+        }
+
+        function clearHistory() {
+            fetch(`/messages/${userUuid}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    messagesDiv.innerHTML = '';
+                    fetchMessages(); // Reload messages to show the initial prompt again
+                }
+            })
+            .catch(error => console.error('Error clearing history:', error));
+        }
+        
+        var messageInput = document.getElementById("messageInput");
+        messageInput.addEventListener("keypress", function(event) {
+            // If the user presses the "Enter" key on the keyboard
+            if (event.key === "Enter") {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Trigger the button element with a click
+              sendMessage()
+            }
+          });
+
+        fetchMessages();
+    </script>
+</body>
+</html>

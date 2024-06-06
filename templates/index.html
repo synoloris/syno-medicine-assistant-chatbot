@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syno | Your Medicine Assistant</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="icon" type="image/png" href="/static/images/favicon.png" />
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <div class="header-info">
+                <img src="/static/images/syno.png" alt="Syno">
+                <h2>Welcome to Syno, your Medicine Assistant.</h2>
+            </div>
+        </div>
+        <div class="content">
+            <h2>Chats</h2>
+            <div class="chat-buttons">
+                {% for user in users %}
+                    <a class="button" href="/chat/{{ user[0] }}">{{ user[1] }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <a class="button create-button" href="/new">Create a new chat</a>
+    </div>
+</body>
+</html>
