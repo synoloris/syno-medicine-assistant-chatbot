@@ -158,7 +158,7 @@ python -m venv .venv
 
 ```
 
-Activate the virtual environment:
+Activate the virtual environment and make sure to use Python version `3.11.4`:
 
 #### Windows
 
@@ -179,12 +179,21 @@ With the virtual environment activated, install the required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+If you're on MacOS, comment out the following dependencies in the requirements.txt file:
+
+```bash
+#idna==3.7
+#intel-openmp==2021.4.0
+#mkl==2021.4.0
+#tbb==2021.12.0
+```
 
 ### 3. Set Up Environment Variables
 
 Create a file named `application.properties` in the root directory of the project and add the following configuration, replacing the placeholders with your actual values:
 
 ```application.properties
+[DEFAULT]
 MYSQL_HOST=your_mysql_host
 MYSQL_PORT=your_mysql_port
 MYSQL_USER=your_mysql_user
